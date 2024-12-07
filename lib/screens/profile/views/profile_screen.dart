@@ -9,9 +9,6 @@ import 'package:waste_management_app/constants/colors.dart';
 import 'package:waste_management_app/constants/fonts.dart';
 import 'package:waste_management_app/screens/login/repository/auth_repository.dart';
 import 'package:waste_management_app/screens/profile/views/components/profile_list_tile.dart';
-import 'package:waste_management_app/screens/profile/views/contact_support_screen.dart';
-import 'package:waste_management_app/screens/profile/views/faq_screen.dart';
-import 'package:waste_management_app/screens/profile/views/feedback_screen.dart';
 import 'package:waste_management_app/screens/trashPickup/views/scheduled_pickups.dart';
 import 'package:waste_management_app/screens/viewShopOrders/views/view_all_orders.dart';
 
@@ -103,36 +100,6 @@ class ProfileScreenState extends State<ProfileScreen> {
                   icon: UIcons.regularRounded.boxes,
                   onTap: () => Get.to(
                     () => ScheduledPickupScreen(backButtonVisible: true),
-                    transition: Transition.zoom,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'Support And Feedback',
-                  style: kTitle2Style.copyWith(color: Colors.black),
-                ),
-                const SizedBox(height: 10),
-                ProfileListTile(
-                  title: 'FAQs',
-                  icon: UIcons.regularRounded.comment_question,
-                  onTap: () => Get.to(
-                    () => FAQScreen(),
-                    transition: Transition.zoom,
-                  ),
-                ),
-                ProfileListTile(
-                  title: 'Contact Support',
-                  icon: UIcons.regularRounded.call_history,
-                  onTap: () => Get.to(
-                    () => ContactSupportScreen(),
-                    transition: Transition.zoom,
-                  ),
-                ),
-                ProfileListTile(
-                  title: 'Feedback',
-                  icon: UIcons.regularRounded.notebook,
-                  onTap: () => Get.to(
-                    () => FeedbackScreen(),
                     transition: Transition.zoom,
                   ),
                 ),

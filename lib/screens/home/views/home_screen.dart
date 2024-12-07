@@ -1,11 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_config/flutter_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uicons/uicons.dart';
 import 'package:waste_management_app/constants/colors.dart';
@@ -16,6 +12,12 @@ import 'package:waste_management_app/screens/home/views/components/carousel_card
 import 'package:waste_management_app/screens/home/views/components/top_row.dart';
 import 'package:waste_management_app/screens/home/views/view_more_screen.dart';
 import 'package:waste_management_app/utils/firebase_functions.dart';
+import 'contact_support_screen.dart';
+import 'faq_screen.dart';
+import 'feedback_screen.dart';
+import 'package:waste_management_app/screens/trashPickup/views/scheduled_pickups.dart';
+import 'package:waste_management_app/screens/login/repository/auth_repository.dart';
+
 
 class UserController extends GetxController {
   Rx<String> userName = ''.obs;
@@ -41,6 +43,80 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Home Screen'),
+      ),
+      drawer: Container(
+  width: 250.0, // Adjust the width of the drawer
+  child: Drawer(
+    child: ListView(
+      padding: EdgeInsets.zero,
+      children: <Widget>[
+        Container(
+          height: 110.0, // Adjust the height as needed
+          color: Colors.green, // Keep the green background color
+          child: DrawerHeader(
+            child: Text(
+              'Menu',
+              style: TextStyle(color: Colors.white, fontSize: 24),
+            ),
+            decoration: BoxDecoration(
+              color: Colors.green,
+            ),
+          ),
+        ),
+        ListTile(
+          title: Text('My Bookings'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ScheduledPickupScreen(
+                  backButtonVisible: true, // Pass true for back button visibility
+                ),
+              ),
+            );
+          },
+        ),
+        ListTile(
+          title: Text('Contact Support'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ContactSupportScreen()),
+            );
+          },
+        ),
+        ListTile(
+          title: Text('FAQ'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => FAQScreen()),
+            );
+          },
+        ),
+        ListTile(
+          title: Text('Feedback'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => FeedbackScreen()),
+            );
+          },
+        ),
+        Divider(), // Add a divider for separation
+        ListTile(
+          title: Text('Logout'),
+          leading: Icon(Icons.exit_to_app, color: Colors.red), // Optional icon
+          onTap: () {
+            AuthRepository.instance.signOut();
+          },
+        ),
+      ],
+    ),
+  ),
+),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -88,7 +164,7 @@ class HomeScreen extends StatelessWidget {
                           },
                           onViewMorePressed: () {
                             // Pass the selected blog to ViewMoreScreen
-                            Get.to(ViewMoreScreen(blogs: blogList));
+                            Get.to(() => ViewMoreScreen(blog: blog));
                           }
                         );
                       },

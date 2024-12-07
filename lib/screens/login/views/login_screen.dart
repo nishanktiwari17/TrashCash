@@ -12,9 +12,19 @@ import '../controller/login_controller.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
   final _loginController = Get.find<LoginController>();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(appBar: AppBar(
+        title: const Text('Login'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            // Navigate back to the previous screen
+            Get.back();
+          },
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -42,22 +52,40 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                CustomFilledButton(
-                  title: 'Login With Phone',
-                  onPressed: () {
-                    Get.to(() => LoginWithPhone());
+                // Login with Phone button with hover effect
+                MouseRegion(
+                  onEnter: (_) {
+                    // Change the button color when hovered
                   },
-                  icon: UIcons.regularRounded.mobile_notch,
+                  onExit: (_) {
+                    // Reset the button color when mouse exits
+                  },
+                  child: CustomFilledButton(
+                    title: 'Login With Phone',
+                    onPressed: () {
+                      Get.to(() => LoginWithPhone());
+                    },
+                    icon: UIcons.regularRounded.mobile_notch,
+                  ),
                 ),
                 SizedBox(
                   height: 20,
                 ),
-                CustomBorderedButton(
-                  title: 'Login With Email',
-                  onPressed: () {
-                    Get.to(() => LoginWithEmail());
+                // Login with Email button with hover effect
+                MouseRegion(
+                  onEnter: (_) {
+                    // Change the button color when hovered
                   },
-                  icon: UIcons.regularRounded.envelope,
+                  onExit: (_) {
+                    // Reset the button color when mouse exits
+                  },
+                  child: CustomBorderedButton(
+                    title: 'Login With Email',
+                    onPressed: () {
+                      Get.to(() => LoginWithEmail());
+                    },
+                    icon: UIcons.regularRounded.envelope,
+                  ),
                 ),
                 SizedBox(
                   height: 20,
@@ -83,12 +111,21 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                CustomBorderedButton(
-                  title: 'Login With Google',
-                  onPressed: () {
-                    _loginController.signInWithGoogle();
+                // Login with Google button with hover effect
+                MouseRegion(
+                  onEnter: (_) {
+                    // Change the button color when hovered
                   },
-                  icon: UIcons.brands.google,
+                  onExit: (_) {
+                    // Reset the button color when mouse exits
+                  },
+                  child: CustomBorderedButton(
+                    title: 'Login With Google',
+                    onPressed: () {
+                      _loginController.signInWithGoogle();
+                    },
+                    icon: UIcons.brands.google,
+                  ),
                 ),
                 SizedBox(
                   height: 20,
