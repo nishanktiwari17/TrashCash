@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 import 'package:uicons/uicons.dart';
 import 'package:waste_management_app/constants/colors.dart';
+import 'package:waste_management_app/screens/social_media/controller/video_list_screen.dart';
 import 'package:waste_management_app/screens/trashPickup/views/scheduled_pickups.dart';
 import 'package:waste_management_app/screens/home/views/home_screen.dart';
 import 'package:waste_management_app/screens/profile/views/profile_screen.dart';
-import 'package:waste_management_app/screens/shop/views/shop_screen.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key? key, required this.initailIndex}) : super(key: key);
@@ -50,7 +50,7 @@ class _BottomNavBarState extends State<BottomNavBar>
             ScheduledPickupScreen(
               backButtonVisible: false,
             ),
-            ShopScreen(),
+            VideoList(),
             ProfileScreen(),
           ],
         ));

@@ -15,23 +15,33 @@ import 'package:waste_management_app/screens/home/data/carousel_blog_list.dart';
 import 'package:waste_management_app/screens/home/views/components/carousel_card.dart';
 import 'package:waste_management_app/screens/home/views/components/top_row.dart';
 import 'package:waste_management_app/screens/home/views/view_more_screen.dart';
+import 'package:waste_management_app/screens/profile/views/profile_screen.dart';
 import 'package:waste_management_app/utils/firebase_functions.dart';
 
 class UserController extends GetxController {
   Rx<String> userName = ''.obs;
+  Rx<String> profilePicUrl = ''.obs;  // Add a variable to store profile picture URL
 
   @override
   void onInit() {
     super.onInit();
-    fetchUserName();
+    fetchUserDetails();  // Fetch both user name and profile picture on initialization
   }
 
-  // Fetch user name from Firestore using FirebaseFunctions
-  Future<void> fetchUserName() async {
+  // Fetch user details (name and profile picture) from Firestore using FirebaseFunctions
+  Future<void> fetchUserDetails() async {
     final user = FirebaseAuth.instance.currentUser;
     String? uid = user?.uid; // Replace with dynamic user UID (e.g., from FirebaseAuth)
-    String? fetchedName = await FirebaseFunctions.instance.getUserName(uid: uid);
-    userName.value = fetchedName;
+    
+    if (uid != null) {
+      // Fetch user name and profile picture URL from Firebase Functions or Firestore
+      String? fetchedName = await FirebaseFunctions.instance.getUserName(uid: uid);
+      String? fetchedProfilePic = await FirebaseFunctions.instance.fetchProfilePic(uid: uid);
+      
+      // Update the controller's state with the fetched details
+      userName.value = fetchedName ?? '';
+      profilePicUrl.value = fetchedProfilePic ?? '';
+    }
   }
 }
 
@@ -48,7 +58,7 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Use GetX to fetch and display the user's name
+                // Use GetX to fetch and display the user's name and profile picture
                 GetX<UserController>(
                   init: UserController(),
                   builder: (controller) {
@@ -56,6 +66,9 @@ class HomeScreen extends StatelessWidget {
                       userName: controller.userName.value.isEmpty
                           ? 'Loading...'  // Placeholder text while loading
                           : controller.userName.value,
+                      profilePicUrl: controller.profilePicUrl.value.isEmpty
+                          ? 'default_image_url'  // Placeholder if no profile picture is set
+                          : controller.profilePicUrl.value,
                     );
                   },
                 ),
@@ -157,6 +170,47 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class HomeScreenTopRow extends StatelessWidget {
+  final String userName;
+  final String profilePicUrl;
+
+  const HomeScreenTopRow({
+    required this.userName,
+    required this.profilePicUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,  // Align items on opposite sides
+      children: [
+        // User name
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Hello, $userName!',
+              style: kTitle2Style.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        // Profile picture on the right
+        GestureDetector(
+          onTap: () {
+            // Navigate to the profile page when the profile picture is tapped
+            Get.to(() => ProfileScreen());  // Replace ProfilePage() with your actual profile page widget
+          },
+          child: CircleAvatar(
+            radius: 30,
+            backgroundImage: NetworkImage(profilePicUrl),  // Load profile picture from URL
+            backgroundColor: Colors.grey[200],  // Set a fallback color if the image fails to load
+          ),
+        ),
+      ],
     );
   }
 }

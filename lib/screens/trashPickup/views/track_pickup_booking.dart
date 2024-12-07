@@ -5,7 +5,6 @@ import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:uicons/uicons.dart';
 import 'package:waste_management_app/constants/colors.dart';
 import 'package:waste_management_app/constants/fonts.dart';
-import 'package:waste_management_app/screens/shop/data/order_satuses.dart';
 import 'package:waste_management_app/screens/trashPickup/data/pickup_statuses.dart';
 import 'package:waste_management_app/screens/trashPickup/model/scheduled_pickup_model.dart';
 

@@ -60,6 +60,46 @@ class FirebaseFunctions {
     return exists;
   }
 
+
+Future<String> fetchProfilePic({required String uid}) async {
+  String profilePicUrl = '';
+
+  try {
+    // Fetch the user document based on UID
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection(FirebaseCollections.USERS)
+        .doc(uid)
+        .get();
+
+    // Check if document exists
+    if (userDoc.exists) {
+      // Safely cast the document data to Map<String, dynamic>
+      Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+
+      // Retrieve the profile picture URL from the 'profile_picture' field
+      profilePicUrl = userData['profile_picture'] ?? '';
+    }
+  } catch (e) {
+    print('Error fetching profile picture: $e');
+  }
+
+  return profilePicUrl;
+}
+
+
+    Future<String> getUserName({required String? uid}) async {
+    String name = '';
+    await FirebaseFirestore.instance
+        .collection(FirebaseCollections.USERS)
+        .doc(uid)
+        .get()
+        .then((value) {
+      if (value.exists) {
+        name = value.data()!['name'];
+      }
+    });
+    return name;
+  }
   //* ------------------- TRASH PICKUP FUNCTIONS: ---------------------
   Future<void> createPickupBooking(
       {required DateTime selectedDate,
@@ -172,18 +212,4 @@ Future<List<ScheduledPickupModel>> fetchScheduledPickups(String uid) async {
   //     }
   //   });
   // }
-
-  Future<String> getUserName({required String? uid}) async {
-    String name = '';
-    await FirebaseFirestore.instance
-        .collection(FirebaseCollections.USERS)
-        .doc(uid)
-        .get()
-        .then((value) {
-      if (value.exists) {
-        name = value.data()!['name'];
-      }
-    });
-    return name;
-  }
 }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:waste_management_app/constants/fonts.dart';
 import 'package:waste_management_app/constants/styles.dart';
 import 'package:waste_management_app/screens/profile/data/faqs.dart';
-import 'package:waste_management_app/screens/shop/views/components/confirmOrder/collapased_header.dart';
 import 'package:waste_management_app/sharedWidgets/top_header_with_back.dart';
 
 class FAQScreen extends StatelessWidget {
@@ -38,9 +37,18 @@ class FAQScreen extends StatelessWidget {
                       ),
                       child: ExpandablePanel(
                         theme: expandableTheme,
-                        header: CollapsedHeader(
-                          stepNumber: index + 1,
-                          title: faqList[index].question,
+                        header: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Text(
+                                'Q${index + 1}: ${faqList[index].question}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         collapsed: Container(),
                         expanded: Padding(
