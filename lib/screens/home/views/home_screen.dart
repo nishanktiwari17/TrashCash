@@ -14,7 +14,6 @@ import 'package:waste_management_app/screens/home/controllers/location_controlle
 import 'package:waste_management_app/screens/home/data/carousel_blog_list.dart';
 import 'package:waste_management_app/screens/home/views/components/carousel_card.dart';
 import 'package:waste_management_app/screens/home/views/components/top_row.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:waste_management_app/constants/colors.dart';

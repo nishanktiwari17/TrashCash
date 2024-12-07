@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:waste_management_app/constants/firebase_collections.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:waste_management_app/screens/trashPickup/model/scheduled_pickup_model.dart';
 
 class FirebaseFunctions {
   static FirebaseFunctions get instance => FirebaseFunctions();
@@ -97,6 +98,42 @@ class FirebaseFunctions {
                   .update({'id': value.id})
             });
   }
+
+// Function to delete pickup booking
+Future<void> deletePickupBooking(String pickupId) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection(FirebaseCollections.PICKUP_BOOKINGS)
+        .doc(pickupId)
+        .delete();
+    print('Pickup booking deleted successfully');
+  } catch (e) {
+    print('Error deleting pickup booking: $e');
+  }
+}
+
+
+Future<List<ScheduledPickupModel>> fetchScheduledPickups(String uid) async {
+  List<ScheduledPickupModel> pickups = [];
+
+  try {
+    var snapshot = await FirebaseFirestore.instance
+        .collection(FirebaseCollections.PICKUP_BOOKINGS)
+        .where('user_id', isEqualTo: uid)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      for (var doc in snapshot.docs) {
+        pickups.add(ScheduledPickupModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+    }
+  } catch (e) {
+    print('Error fetching scheduled pickups: $e');
+  }
+
+  return pickups;
+}
+
 
   //* ------------------- SUBMIT FEEDBACK FUNCTIONS: ---------------------
 
