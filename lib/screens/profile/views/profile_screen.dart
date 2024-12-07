@@ -1,8 +1,10 @@
-import 'package:dashed_circle/dashed_circle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'dart:io'; 
+
 import 'package:uicons/uicons.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:waste_management_app/constants/colors.dart';
 import 'package:waste_management_app/constants/fonts.dart';
 import 'package:waste_management_app/screens/login/repository/auth_repository.dart';
@@ -13,8 +15,26 @@ import 'package:waste_management_app/screens/profile/views/feedback_screen.dart'
 import 'package:waste_management_app/screens/trashPickup/views/scheduled_pickups.dart';
 import 'package:waste_management_app/screens/viewShopOrders/views/view_all_orders.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  ProfileScreenState createState() => ProfileScreenState();
+}
+
+class ProfileScreenState extends State<ProfileScreen> {
+  File? _image;  // Variable to hold the picked image
+
+  // Method to pick an image from the gallery
+  Future<void> _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);  // Use ImageSource.camera for capturing a new photo
+    if (image != null) {
+      setState(() {
+        _image = File(image.path);  // Update the UI with the selected image
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,41 +50,46 @@ class ProfileScreen extends StatelessWidget {
                 Center(
                   child: Column(
                     children: [
-                      DashedCircle(
-                        dashes: 10,
-                        color: kPrimaryColor,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CircleAvatar(
-                            backgroundColor: kSecondaryColor,
-                            radius: 50,
-                            child: SvgPicture.asset(
-                              'assets/images/homeScreen/profile_pic.svg',
-                            ),
-                          ),
+                      GestureDetector(
+                        onTap: _pickImage,  // Open image picker when tapped
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: kPrimaryColor,
+                          // Check if image is picked; use SVG for default
+                          child: _image == null
+                              ? SvgPicture.asset(
+                                  'assets/images/homeScreen/profile_pic.svg', // Display SVG if no image selected
+                                  height: 100,
+                                  width: 100,
+                                  fit: BoxFit.cover,
+                                )
+                              : ClipOval(
+                                  child: Image.file(
+                                    _image!, // Show the picked image
+                                    height: 100,
+                                    width: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        AuthRepository
-                            .instance.firebaseUser.value!.displayName!,
-                        style: kTitleStyle,
+                      const SizedBox(height: 10),
+                      // Center the user's name
+                      Center(
+                        child: Text(
+                          AuthRepository.instance.firebaseUser.value?.displayName ?? 'User',  // Null safety for displayName
+                          style: kTitleStyle,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 Text(
                   'Orders And Payments',
                   style: kTitle2Style.copyWith(color: Colors.black),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 ProfileListTile(
                   title: 'My Orders',
                   icon: UIcons.regularRounded.shopping_bag,
@@ -77,22 +102,16 @@ class ProfileScreen extends StatelessWidget {
                   title: 'My Bookings',
                   icon: UIcons.regularRounded.boxes,
                   onTap: () => Get.to(
-                    () => ScheduledPickupScreen(
-                      backButtonVisible: true,
-                    ),
+                    () => ScheduledPickupScreen(backButtonVisible: true),
                     transition: Transition.zoom,
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 Text(
                   'Support And Feedback',
                   style: kTitle2Style.copyWith(color: Colors.black),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 ProfileListTile(
                   title: 'FAQs',
                   icon: UIcons.regularRounded.comment_question,
@@ -117,16 +136,12 @@ class ProfileScreen extends StatelessWidget {
                     transition: Transition.zoom,
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 Text(
                   'Account Settings',
                   style: kTitle2Style.copyWith(color: Colors.black),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 ProfileListTile(
                   title: 'Logout',
                   icon: UIcons.regularRounded.exit,
