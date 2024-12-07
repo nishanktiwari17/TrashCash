@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              HomeScreenTopRow(userName: 'Bhavesh S'),
+              HomeScreenTopRow(userName: 'Vedant'),
               SizedBox(
                 height: 20,
               ),

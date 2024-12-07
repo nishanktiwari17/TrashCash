@@ -37,23 +37,23 @@ dependencies:
   get: ^4.6.5
   uicons: ^1.0.1
   flutter_svg:
-  pinput: ^2.2.31
-  carousel_slider: ^4.2.1
-  geolocator: ^8.2.0
-  geocoding: ^2.0.4
-  google_maps_flutter: ^2.0.9
+  pinput: ^5.0.0
+  carousel_slider: ^5.0.0
+  geolocator: ^13.0.2
+  geocoding: ^3.0.0
+  google_maps_flutter: ^2.0.10
   tab_indicator_styler: ^2.0.0
   dashed_circle: ^0.0.2
-  intl: ^0.18.1
+  intl: ^0.19.0
   date_picker_timeline: ^1.2.5
   flutter_slidable: ^3.0.0
   step_progress_indicator: ^1.0.2
-  firebase_core: ^2.14.0
-  firebase_auth: ^4.6.3
+  firebase_core: ^3.8.1
+  firebase_auth: ^5.3.4
   google_sign_in: ^6.1.4
-  cloud_firestore: ^4.8.1
+  cloud_firestore: ^5.5.1
   expandable: ^5.0.1
-  getwidget: ^3.1.1
+  getwidget: ^4.0.0
   shared_preferences: ^2.2.0
   flutter_config: ^2.0.1
 
@@ -66,7 +66,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -84,7 +84,7 @@ flutter:
     - assets/images/splashScreen/
     - assets/images/loginScreen/
     - assets/images/homeScreen/
-    - assets/icons/
+    # - assets/icons/
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see

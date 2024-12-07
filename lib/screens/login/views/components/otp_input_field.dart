@@ -25,9 +25,9 @@ class OtpInputField extends StatelessWidget {
               length: 6,
               controller: loginController.otpPinController,
               focusNode: loginController.otpFocusNode,
-              androidSmsAutofillMethod:
-                  AndroidSmsAutofillMethod.smsUserConsentApi,
-              listenForMultipleSmsOnAndroid: true,
+              // androidSmsAutofillMethod:
+              //     AndroidSmsAutofillMethod.smsUserConsentApi,
+              // listenForMultipleSmsOnAndroid: true,
               defaultPinTheme: defaultPinTheme,
               hapticFeedbackType: HapticFeedbackType.lightImpact,
               onCompleted: (pin) {
