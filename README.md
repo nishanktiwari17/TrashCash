@@ -1,4 +1,4 @@
-# Trash Dump
+# Trash Cash
 
 The Trash Dump App is a mobile application designed to simplify waste management and promote sustainable practices. It allows users to conveniently schedule waste pickups from their homes and offers an in-built store where they can purchase items made from recycled waste.
 
