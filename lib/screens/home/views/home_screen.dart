@@ -14,7 +14,7 @@ import 'package:waste_management_app/screens/home/controllers/location_controlle
 import 'package:waste_management_app/screens/home/data/carousel_blog_list.dart';
 import 'package:waste_management_app/screens/home/views/components/carousel_card.dart';
 import 'package:waste_management_app/screens/home/views/components/top_row.dart';
-
+import 'package:waste_management_app/screens/home/views/view_more_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:waste_management_app/constants/colors.dart';
@@ -89,6 +89,14 @@ class HomeScreen extends StatelessWidget {
                           title: blog.title,
                           description: blog.description,
                           imagePath: blog.imagePath,
+                          onTap: () {
+                            // Define the action for the entire card (e.g., navigate to a detail screen)
+                            print('Card tapped: ${blog.title}');
+                          },
+                          onViewMorePressed: () {
+                            // Pass the selected blog to ViewMoreScreen
+                            Get.to(ViewMoreScreen(blogs: blogList));
+                          }
                         );
                       },
                     );
