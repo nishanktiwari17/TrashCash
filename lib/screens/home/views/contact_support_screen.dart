@@ -32,6 +32,7 @@ class ContactSupportScreen extends StatelessWidget {
                 ContactSupportTile(
                   icon: UIcons.regularRounded.envelope,
                   contactHandle: 'support@trashcash.com ',
+                  contactHandle: 'support@trashcash.com ',
                 ),
                 SizedBox(
                   height: 25,
@@ -46,12 +47,14 @@ class ContactSupportScreen extends StatelessWidget {
                 ContactSupportTile(
                   icon: UIcons.brands.facebook,
                   contactHandle: 'facebook.com/trashcash',
+                  contactHandle: 'facebook.com/trashcash',
                 ),
                 SizedBox(
                   height: 25,
                 ),
                 ContactSupportTile(
                   icon: UIcons.brands.instagram,
+                  contactHandle: 'instagram.com/trashcash',
                   contactHandle: 'instagram.com/trashcash',
                 ),
               ],
