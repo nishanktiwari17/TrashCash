@@ -88,6 +88,14 @@ class HomeScreen extends StatelessWidget {
                           title: blog.title,
                           description: blog.description,
                           imagePath: blog.imagePath,
+                          onTap: () {
+                            // Define the action for the entire card (e.g., navigate to a detail screen)
+                            print('Card tapped: ${blog.title}');
+                          },
+                          onViewMorePressed: () {
+                            // Pass the selected blog to ViewMoreScreen
+                            Get.to(ViewMoreScreen(blogs: blogList));
+                          }
                         );
                       },
                     );
