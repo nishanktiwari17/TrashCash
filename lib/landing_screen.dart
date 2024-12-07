@@ -52,7 +52,7 @@ class LandingScreen extends StatelessWidget {
                 ),
                 Center(
                   child: Text(
-                    'TrashDump',
+                    'TrashCash',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,

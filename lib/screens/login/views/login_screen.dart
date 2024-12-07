@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:uicons/uicons.dart';
 import 'package:waste_management_app/screens/login/views/login_with_email.dart';
-import 'package:waste_management_app/screens/login/views/login_with_phone.dart';
+
 import 'package:waste_management_app/screens/signup/views/signup_screen.dart';
 import 'package:waste_management_app/sharedWidgets/custom_bordered_button.dart';
-import 'package:waste_management_app/sharedWidgets/custom_filled_button.dart';
 
 import '../controller/login_controller.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
-  final _loginController = Get.find<LoginController>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,110 +33,37 @@ class LoginScreen extends StatelessWidget {
                 Center(
                   child: Text(
                     'Login',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 35,
-                ),
+                const SizedBox(height: 35),
                 Image.asset(
                   'assets/images/loginScreen/login_screen.png',
                   height: 300,
                   width: 300,
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                // Login with Phone button with hover effect
-                MouseRegion(
-                  onEnter: (_) {
-                    // Change the button color when hovered
+                const SizedBox(height: 20),
+                // Login with Email button
+                CustomBorderedButton(
+                  title: 'Login With Email',
+                  onPressed: () {
+                    Get.to(() => LoginWithEmail());
                   },
-                  onExit: (_) {
-                    // Reset the button color when mouse exits
-                  },
-                  child: CustomFilledButton(
-                    title: 'Login With Phone',
-                    onPressed: () {
-                      Get.to(() => LoginWithPhone());
-                    },
-                    icon: UIcons.regularRounded.mobile_notch,
-                  ),
+                  icon: Icons.email_outlined,
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                // Login with Email button with hover effect
-                MouseRegion(
-                  onEnter: (_) {
-                    // Change the button color when hovered
-                  },
-                  onExit: (_) {
-                    // Reset the button color when mouse exits
-                  },
-                  child: CustomBorderedButton(
-                    title: 'Login With Email',
-                    onPressed: () {
-                      Get.to(() => LoginWithEmail());
-                    },
-                    icon: UIcons.regularRounded.envelope,
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: const [
-                    Expanded(
-                      child: Divider(
-                        thickness: 2,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text("OR"),
-                    ),
-                    Expanded(
-                      child: Divider(
-                        thickness: 2,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                // Login with Google button with hover effect
-                MouseRegion(
-                  onEnter: (_) {
-                    // Change the button color when hovered
-                  },
-                  onExit: (_) {
-                    // Reset the button color when mouse exits
-                  },
-                  child: CustomBorderedButton(
-                    title: 'Login With Google',
-                    onPressed: () {
-                      _loginController.signInWithGoogle();
-                    },
-                    icon: UIcons.brands.google,
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
+                // Sign Up Option
                 GestureDetector(
                   onTap: () {
-                    //* Navigate to Sign Up Screen
                     Get.to(() => SignUpScreen());
                   },
                   child: RichText(
                     text: TextSpan(
                       text: 'Don\'t have an account? ',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 16,
                       ),

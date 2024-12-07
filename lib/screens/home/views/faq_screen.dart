@@ -23,13 +23,10 @@ class FAQScreen extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.9 - 35,
+              Expanded(
                 child: ListView.builder(
                   itemCount: faqList.length,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.only(
@@ -39,33 +36,29 @@ class FAQScreen extends StatelessWidget {
                         theme: expandableTheme,
                         header: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              Text(
-                                'Q${index + 1}: ${faqList[index].question}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                          child: Text(
+                            'Q${index + 1}: ${faqList[index].question}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
-                        collapsed: Container(),
+                        collapsed: const SizedBox.shrink(),
                         expanded: Padding(
                           padding: const EdgeInsets.only(
                             top: 16,
-                            bottom: 16,
                           ),
                           child: Text(
                             faqList[index].answer,
-                            style: kSubtitleStyle,
+                            style: kSubtitleStyle.copyWith(fontSize: 14),
                           ),
                         ),
                       ),
                     );
                   },
                 ),
-              )
+              ),
             ],
           ),
         ),
