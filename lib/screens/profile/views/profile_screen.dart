@@ -9,7 +9,7 @@ import 'package:waste_management_app/constants/colors.dart';
 import 'package:waste_management_app/constants/fonts.dart';
 import 'package:waste_management_app/screens/login/repository/auth_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase_auth/firebase_auth.dart'; 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -43,7 +43,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Method to pick an image from the gallery
+  // Method to pick an image from the gallery and upload it immediately
   Future<void> _pickImage() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -52,6 +52,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         _image = File(image.path);
       });
+      _uploadImage(); // Automatically upload the image once it's picked
     }
   }
 
@@ -299,9 +300,46 @@ class ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(
-                            right: 10.0), // Align Gender to the left
-                        child: _buildGenderField(),
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: InputDecorator(
+                          decoration: InputDecoration(
+                            labelText: 'Gender',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical:
+                                    16.0), // To match the height of other fields
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: Container(
+                              width: double
+                                  .infinity, // Ensures same width as other fields
+                              child: DropdownButton<String>(
+                                value: _selectedGender,
+                                isExpanded:
+                                    true, // Ensures the dropdown takes full width
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    if (newValue != null) {
+                                      _selectedGender = newValue;
+                                    }
+                                  });
+                                },
+                                items: [
+                                  'Men',
+                                  'Women',
+                                  'Other'
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -309,18 +347,26 @@ class ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(
-                    onPressed: _hasChanges() ? _updateUserDetails : null,
+                    onPressed: _hasChanges()
+                        ? () {
+                            _updateUserDetails();
+                          }
+                        : null, // Only enabled if changes are made
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: kPrimaryColor,
                       padding:
-                          EdgeInsets.symmetric(horizontal: 50, vertical: 12),
+                          EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
                     ),
                     child: Text(
-                      'Save',
+                      'Save Changes',
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
