@@ -41,17 +41,17 @@ class ScheduledBookingTile extends StatelessWidget {
         style: kTitle3Style,
       ),
       subtitle: Text(
-        '${scheduledPickup.selectedDate.toDate().day.toString()}-${scheduledPickup.selectedDate.toDate().month.toString()}-${scheduledPickup.selectedDate.toDate().year.toString()} at ${DateFormat('hh:mm a').format(scheduledPickup.selectedDate.toDate())}',
+        '${scheduledPickup.selectedDate.toDate().day}-${scheduledPickup.selectedDate.toDate().month}-${scheduledPickup.selectedDate.toDate().year} at ${DateFormat('hh:mm a').format(scheduledPickup.selectedDate.toDate())}',
         style: kSubtitleStyle,
       ),
       trailing: GestureDetector(
         onTap: onCancel,
         child: CircleAvatar(
-          backgroundColor: Color(0xffFFF2F2),
+          backgroundColor: const Color(0xffFFF2F2),
           child: Icon(
             UIcons.regularRounded.cross_small,
             size: 20,
-            color: Color(0xffEB455F),
+            color: const Color(0xffEB455F),
           ),
         ),
       ),

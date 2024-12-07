@@ -31,9 +31,11 @@ class ScheduledPickupModel {
     required this.contactNumber,
     required this.pickupPartner,
   });
+
   static final helper = HelperModel(
     ((map) => ScheduledPickupModel.fromMap(map)),
   );
+
   ScheduledPickupModel copyWith({
     String? instructions,
     String? userId,
