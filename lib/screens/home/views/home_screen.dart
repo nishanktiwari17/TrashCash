@@ -14,13 +14,7 @@ import 'package:waste_management_app/screens/home/controllers/location_controlle
 import 'package:waste_management_app/screens/home/data/carousel_blog_list.dart';
 import 'package:waste_management_app/screens/home/views/components/carousel_card.dart';
 import 'package:waste_management_app/screens/home/views/components/top_row.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:waste_management_app/constants/colors.dart';
-import 'package:waste_management_app/constants/fonts.dart';
-import 'package:waste_management_app/screens/home/controllers/location_controller.dart';
-import 'package:waste_management_app/screens/home/views/components/carousel_card.dart';
-import 'package:waste_management_app/screens/home/views/components/top_row.dart';
+import 'package:waste_management_app/screens/home/views/view_more_screen.dart';
 import 'package:waste_management_app/utils/firebase_functions.dart';
 
 class UserController extends GetxController {
