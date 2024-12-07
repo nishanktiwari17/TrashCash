@@ -60,6 +60,7 @@ dependencies:
   firebase_storage: ^12.3.7
   youtube_player_flutter: ^9.1.1
   http: ^1.2.2
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:

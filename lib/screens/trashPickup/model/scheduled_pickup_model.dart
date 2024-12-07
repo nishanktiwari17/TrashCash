@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart'; // Import GetX for reactive variables
 import 'package:waste_management_app/screens/trashPickup/model/pickup_partner_model.dart';
 import 'package:waste_management_app/utils/helper_model.dart';
 
@@ -12,11 +13,12 @@ class ScheduledPickupModel {
   final Timestamp selectedDate;
   final List<String> selectedWasteTypes;
   final GeoPoint selectedLocation;
-  final String status;
+  final RxString status; // RxString for reactive status
   final String id;
   final String contactName;
   final String contactNumber;
-  final PickupPartnerModel pickupPartner;
+  final Rx<PickupPartnerModel> pickupPartner; // Rx<PickupPartnerModel> for reactive partner
+
   ScheduledPickupModel({
     required this.instructions,
     required this.userId,
@@ -59,11 +61,13 @@ class ScheduledPickupModel {
       selectedDate: selectedDate ?? this.selectedDate,
       selectedWasteTypes: selectedWasteTypes ?? this.selectedWasteTypes,
       selectedLocation: selectedLocation ?? this.selectedLocation,
-      status: status ?? this.status,
+      status: status != null ? RxString(status) : this.status,
       id: id ?? this.id,
       contactName: contactName ?? this.contactName,
       contactNumber: contactNumber ?? this.contactNumber,
-      pickupPartner: pickupPartner ?? this.pickupPartner,
+      pickupPartner: pickupPartner != null
+          ? Rx<PickupPartnerModel>(pickupPartner)
+          : this.pickupPartner,
     );
   }
 
@@ -76,11 +80,11 @@ class ScheduledPickupModel {
       'selectedDate': selectedDate,
       'selectedWasteTypes': selectedWasteTypes,
       'selectedLocation': selectedLocation,
-      'status': status,
+      'status': status.value,
       'id': id,
       'contactName': contactName,
       'contactNumber': contactNumber,
-      'pickupPartner': pickupPartner.toMap(),
+      'pickupPartner': pickupPartner.value.toMap(),
     };
   }
 
@@ -93,11 +97,13 @@ class ScheduledPickupModel {
       selectedDate: map['selectedDate'] ?? '',
       selectedWasteTypes: List<String>.from(map['selectedWasteTypes']),
       selectedLocation: map['selectedLocation'] ?? '',
-      status: map['status'] ?? '',
+      status: RxString(map['status'] ?? ''),
       id: map['id'] ?? '',
       contactName: map['contactName'] ?? '',
       contactNumber: map['contactNumber'] ?? '',
-      pickupPartner: PickupPartnerModel.fromMap(map['pickupPartner']),
+      pickupPartner: Rx<PickupPartnerModel>(
+        PickupPartnerModel.fromMap(map['pickupPartner']),
+      ),
     );
   }
 
@@ -123,7 +129,7 @@ class ScheduledPickupModel {
         other.selectedDate == selectedDate &&
         listEquals(other.selectedWasteTypes, selectedWasteTypes) &&
         other.selectedLocation == selectedLocation &&
-        other.status == status &&
+        other.status == status.value &&
         other.id == id &&
         other.contactName == contactName &&
         other.contactNumber == contactNumber;

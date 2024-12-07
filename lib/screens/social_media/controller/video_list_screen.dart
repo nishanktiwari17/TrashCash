@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart'; // For caching images
 import 'package:waste_management_app/screens/social_media/models/channel.dart';
 import 'package:waste_management_app/screens/social_media/controller/video_screen.dart';
 import 'package:waste_management_app/screens/social_media/views/components/youtube_service.dart';
@@ -9,8 +10,9 @@ class VideoList extends StatefulWidget {
 }
 
 class _VideoListState extends State<VideoList> {
-  Channel? _channel;  // Making _channel nullable
+  Channel? _channel;
   bool _isLoading = false;
+  bool _hasError = false;
 
   @override
   void initState() {
@@ -19,62 +21,80 @@ class _VideoListState extends State<VideoList> {
   }
 
   _initChannel() async {
-    Channel channel = await APIService.instance
-        .fetchChannel(channelId: 'UC6Dy0rQ6zDnQuHQ1EeErGUA');
-    setState(() {
-      _channel = channel;
-    });
+    try {
+      setState(() {
+        _isLoading = true;
+        _hasError = false;
+      });
+      Channel channel = await APIService.instance.fetchChannel(channelId: 'UClUC_8c_F3aBmwME-dNfvKg');
+      setState(() {
+        _channel = channel;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _hasError = true;
+      });
+      print('Error fetching channel data: $e');
+    }
   }
 
   _buildProfileInfo() {
     return Container(
       margin: EdgeInsets.all(20.0),
       padding: EdgeInsets.all(20.0),
-      height: 100.0,
+      height: 120.0,
       decoration: BoxDecoration(
         color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
             color: Colors.black12,
-            offset: Offset(0, 1),
-            blurRadius: 6.0,
+            offset: Offset(0, 2),
+            blurRadius: 8.0,
           ),
         ],
       ),
       child: Row(
         children: <Widget>[
-          CircleAvatar(
-            backgroundColor: Colors.white,
-            radius: 35.0,
-            backgroundImage: NetworkImage(_channel!.profilePictureUrl),  // Using null-aware operator
+          ClipOval(
+            child: CachedNetworkImage(
+              imageUrl: _channel!.profilePictureUrl,
+              width: 70.0,
+              height: 70.0,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ),
           ),
-          SizedBox(width: 12.0),
+          SizedBox(width: 15.0),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  _channel!.title,  // Using null-aware operator
+                  _channel!.title,
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  '${_channel!.subscriberCount} subscribers',  // Using null-aware operator
+                  '${_channel!.subscriberCount} subscribers',
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 16.0,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -88,34 +108,32 @@ class _VideoListState extends State<VideoList> {
           builder: (_) => VideoScreen(id: video.id),
         ),
       ),
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-        padding: EdgeInsets.all(10.0),
-        height: 140.0,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              offset: Offset(0, 1),
-              blurRadius: 6.0,
-            ),
-          ],
-        ),
+      child: Card(
+        margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+        elevation: 5.0,
         child: Row(
           children: <Widget>[
-            Image(
-              width: 150.0,
-              image: NetworkImage(video.thumbnailUrl),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: CachedNetworkImage(
+                width: 150.0,
+                height: 100.0,
+                imageUrl: video.thumbnailUrl,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
             ),
-            SizedBox(width: 10.0),
+            SizedBox(width: 12.0),
             Expanded(
               child: Text(
                 video.title,
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 18.0,
+                  fontSize: 16.0,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -125,14 +143,23 @@ class _VideoListState extends State<VideoList> {
   }
 
   _loadMoreVideos() async {
-    _isLoading = true;
-    List<Video> moreVideos = await APIService.instance
-        .fetchVideosFromPlaylist(playlistId: _channel!.uploadPlaylistId);  // Using null-aware operator
-    List<Video> allVideos = _channel!.videos..addAll(moreVideos);  // Using null-aware operator
     setState(() {
-      _channel!.videos = allVideos;  // Using null-aware operator
+      _isLoading = true;
     });
-    _isLoading = false;
+    try {
+      List<Video> moreVideos = await APIService.instance.fetchVideosFromPlaylist(playlistId: _channel!.uploadPlaylistId);
+      List<Video> allVideos = _channel!.videos..addAll(moreVideos);
+      setState(() {
+        _channel!.videos = allVideos;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _hasError = true;
+      });
+      print('Error loading more videos: $e');
+    }
   }
 
   @override
@@ -141,35 +168,34 @@ class _VideoListState extends State<VideoList> {
       appBar: AppBar(
         title: Text('YouTube Channel'),
       ),
-      body: _channel != null
-          ? NotificationListener<ScrollNotification>(
-              onNotification: (ScrollNotification scrollDetails) {
-                if (!_isLoading &&
-                    _channel!.videos.length != int.parse(_channel!.videoCount) &&
-                    scrollDetails.metrics.pixels ==
-                        scrollDetails.metrics.maxScrollExtent) {
-                  _loadMoreVideos();
-                }
-                return false;
-              },
-              child: ListView.builder(
-                itemCount: 1 + _channel!.videos.length,
-                itemBuilder: (BuildContext context, int index) {
-                  if (index == 0) {
-                    return _buildProfileInfo();
-                  }
-                  Video video = _channel!.videos[index - 1];  // Using null-aware operator
-                  return _buildVideo(video);
-                },
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
               ),
             )
-          : Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).primaryColor, // Red
+          : _hasError
+              ? Center(child: Text('Error loading content. Please try again later.'))
+              : NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollDetails) {
+                    if (!_isLoading &&
+                        _channel!.videos.length != int.parse(_channel!.videoCount) &&
+                        scrollDetails.metrics.pixels == scrollDetails.metrics.maxScrollExtent) {
+                      _loadMoreVideos();
+                    }
+                    return false;
+                  },
+                  child: ListView.builder(
+                    itemCount: 1 + _channel!.videos.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == 0) {
+                        return _buildProfileInfo();
+                      }
+                      Video video = _channel!.videos[index - 1];
+                      return _buildVideo(video);
+                    },
+                  ),
                 ),
-              ),
-            ),
     );
   }
 }

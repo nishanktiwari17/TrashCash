@@ -8,9 +8,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:waste_management_app/constants/colors.dart';
 import 'package:waste_management_app/constants/fonts.dart';
 import 'package:waste_management_app/screens/login/repository/auth_repository.dart';
-import 'package:firebase_storage/firebase_storage.dart'; // Import Firebase Storage
-import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore for user info
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart'; 
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

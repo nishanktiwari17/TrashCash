@@ -31,28 +31,28 @@ class ContactSupportScreen extends StatelessWidget {
                 ),
                 ContactSupportTile(
                   icon: UIcons.regularRounded.envelope,
-                  contactHandle: 'support@trashdump.com ',
+                  contactHandle: 'support@trashcash.com ',
                 ),
                 SizedBox(
                   height: 25,
                 ),
                 ContactSupportTile(
                   icon: UIcons.regularRounded.call_history,
-                  contactHandle: '+91 9876543210',
+                  contactHandle: '+1 6802165746',
                 ),
                 SizedBox(
                   height: 25,
                 ),
                 ContactSupportTile(
                   icon: UIcons.brands.facebook,
-                  contactHandle: 'facebook.com/trashdump',
+                  contactHandle: 'facebook.com/trashcash',
                 ),
                 SizedBox(
                   height: 25,
                 ),
                 ContactSupportTile(
                   icon: UIcons.brands.instagram,
-                  contactHandle: 'instagram.com/trashdump',
+                  contactHandle: 'instagram.com/trashcash',
                 ),
               ],
             ),

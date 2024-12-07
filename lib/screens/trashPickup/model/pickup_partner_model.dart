@@ -1,27 +1,30 @@
 import 'dart:convert';
+import 'package:get/get.dart'; // Import GetX for reactive variables
 
 class PickupPartnerModel {
-  final String partnerName;
-  final String partnerContact;
+  final RxString partnerName;
+  final RxString partnerContact;
+
   PickupPartnerModel({
-    required this.partnerName,
-    required this.partnerContact,
-  });
+    required String partnerName,
+    required String partnerContact,
+  })  : partnerName = RxString(partnerName), // RxString for reactive variables
+        partnerContact = RxString(partnerContact); // RxString for reactive variables
 
   PickupPartnerModel copyWith({
     String? partnerName,
     String? partnerContact,
   }) {
     return PickupPartnerModel(
-      partnerName: partnerName ?? this.partnerName,
-      partnerContact: partnerContact ?? this.partnerContact,
+      partnerName: partnerName ?? this.partnerName.value,
+      partnerContact: partnerContact ?? this.partnerContact.value,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'partner_name': partnerName,
-      'partner_contact': partnerContact,
+      'partner_name': partnerName.value,
+      'partner_contact': partnerContact.value,
     };
   }
 
@@ -39,15 +42,15 @@ class PickupPartnerModel {
 
   @override
   String toString() =>
-      'DeliveryPartnerModel(partner_name: $partnerName, partner_contact: $partnerContact)';
+      'PickupPartnerModel(partner_name: ${partnerName.value}, partner_contact: ${partnerContact.value})';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
     return other is PickupPartnerModel &&
-        other.partnerName == partnerName &&
-        other.partnerContact == partnerContact;
+        other.partnerName.value == partnerName.value &&
+        other.partnerContact.value == partnerContact.value;
   }
 
   @override
