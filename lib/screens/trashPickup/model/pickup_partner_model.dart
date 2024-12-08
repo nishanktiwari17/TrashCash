@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:get/get.dart'; // Import GetX for reactive variables
+import 'package:get/get.dart'; 
 
 class PickupPartnerModel {
   final RxString partnerName;
@@ -8,8 +8,8 @@ class PickupPartnerModel {
   PickupPartnerModel({
     required String partnerName,
     required String partnerContact,
-  })  : partnerName = RxString(partnerName), // RxString for reactive variables
-        partnerContact = RxString(partnerContact); // RxString for reactive variables
+  })  : partnerName = RxString(partnerName), 
+        partnerContact = RxString(partnerContact);
 
   PickupPartnerModel copyWith({
     String? partnerName,

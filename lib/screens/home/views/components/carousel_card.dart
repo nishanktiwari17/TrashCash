@@ -7,21 +7,21 @@ class CarouselCard extends StatelessWidget {
   final String title;
   final String description;
   final String imagePath;
-  final VoidCallback onTap;  // Added onTap callback for the entire card
-  final VoidCallback onViewMorePressed;  // Added onTap callback for "View More"
+  final VoidCallback onTap;  
+  final VoidCallback onViewMorePressed;
 
   CarouselCard({
     required this.title,
     required this.description,
     required this.imagePath,
-    required this.onTap,  // Add the onTap callback for the entire card
-    required this.onViewMorePressed,  // Add the onTap callback for "View More" button
+    required this.onTap,  
+    required this.onViewMorePressed,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,  // Trigger the onTap callback for the entire card
+      onTap: onTap, 
       child: Container(
         margin: EdgeInsets.only(right: 8),
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -52,7 +52,7 @@ class CarouselCard extends StatelessWidget {
                   ),
                   SizedBox(height: 15),
                   GestureDetector(
-                    onTap: onViewMorePressed,  // Trigger onViewMorePressed when tapped
+                    onTap: onViewMorePressed,
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(

@@ -20,7 +20,6 @@ class LoginWithEmail extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // Navigate back to the previous screen
             Get.back();
           },
         ),

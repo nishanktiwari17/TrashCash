@@ -6,13 +6,13 @@ import 'package:waste_management_app/screens/social_media/views/components/youtu
 
 class VideoList extends StatefulWidget {
   @override
-  _VideoListState createState() => _VideoListState();
+  VideoListState createState() => VideoListState();
 }
 
-class _VideoListState extends State<VideoList> {
-  Channel? _channel;
-  bool _isLoading = false;
-  bool _hasError = false;
+class VideoListState extends State<VideoList> {
+  Channel? channel;
+  bool isLoading = false;
+  bool hasError = false;
 
   @override
   void initState() {
@@ -23,18 +23,18 @@ class _VideoListState extends State<VideoList> {
   _initChannel() async {
     try {
       setState(() {
-        _isLoading = true;
-        _hasError = false;
+        isLoading = true;
+        hasError = false;
       });
       Channel channel = await APIService.instance.fetchChannel(channelId: 'UClUC_8c_F3aBmwME-dNfvKg');
       setState(() {
-        _channel = channel;
-        _isLoading = false;
+        channel = channel;
+        isLoading = false;
       });
     } catch (e) {
       setState(() {
-        _isLoading = false;
-        _hasError = true;
+        isLoading = false;
+        hasError = true;
       });
       print('Error fetching channel data: $e');
     }
@@ -60,7 +60,7 @@ class _VideoListState extends State<VideoList> {
         children: <Widget>[
           ClipOval(
             child: CachedNetworkImage(
-              imageUrl: _channel!.profilePictureUrl,
+              imageUrl: channel!.profilePictureUrl,
               width: 70.0,
               height: 70.0,
               fit: BoxFit.cover,
@@ -75,7 +75,7 @@ class _VideoListState extends State<VideoList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  _channel!.title,
+                  channel!.title,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 22.0,
@@ -84,7 +84,7 @@ class _VideoListState extends State<VideoList> {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  '${_channel!.subscriberCount} subscribers',
+                  '${channel!.subscriberCount} subscribers',
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 16.0,
@@ -144,19 +144,19 @@ class _VideoListState extends State<VideoList> {
 
   _loadMoreVideos() async {
     setState(() {
-      _isLoading = true;
+      isLoading = true;
     });
     try {
-      List<Video> moreVideos = await APIService.instance.fetchVideosFromPlaylist(playlistId: _channel!.uploadPlaylistId);
-      List<Video> allVideos = _channel!.videos..addAll(moreVideos);
+      List<Video> moreVideos = await APIService.instance.fetchVideosFromPlaylist(playlistId: channel!.uploadPlaylistId);
+      List<Video> allVideos = channel!.videos..addAll(moreVideos);
       setState(() {
-        _channel!.videos = allVideos;
-        _isLoading = false;
+        channel!.videos = allVideos;
+        isLoading = false;
       });
     } catch (e) {
       setState(() {
-        _isLoading = false;
-        _hasError = true;
+        isLoading = false;
+        hasError = true;
       });
       print('Error loading more videos: $e');
     }
@@ -168,30 +168,30 @@ class _VideoListState extends State<VideoList> {
       appBar: AppBar(
         title: Text('YouTube Channel'),
       ),
-      body: _isLoading
+      body: isLoading
           ? Center(
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
               ),
             )
-          : _hasError
+          : hasError
               ? Center(child: Text('Error loading content. Please try again later.'))
               : NotificationListener<ScrollNotification>(
                   onNotification: (ScrollNotification scrollDetails) {
-                    if (!_isLoading &&
-                        _channel!.videos.length != int.parse(_channel!.videoCount) &&
+                    if (!isLoading &&
+                        channel!.videos.length != int.parse(channel!.videoCount) &&
                         scrollDetails.metrics.pixels == scrollDetails.metrics.maxScrollExtent) {
                       _loadMoreVideos();
                     }
                     return false;
                   },
                   child: ListView.builder(
-                    itemCount: 1 + _channel!.videos.length,
+                    itemCount: 1 + channel!.videos.length,
                     itemBuilder: (BuildContext context, int index) {
                       if (index == 0) {
                         return _buildProfileInfo();
                       }
-                      Video video = _channel!.videos[index - 1];
+                      Video video = channel!.videos[index - 1];
                       return _buildVideo(video);
                     },
                   ),

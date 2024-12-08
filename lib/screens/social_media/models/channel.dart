@@ -7,7 +7,6 @@ class Channel {
   final String uploadPlaylistId;
   List<Video> videos;
 
-  // Constructor with required fields
   Channel({
     required this.id,
     required this.title,
@@ -15,15 +14,13 @@ class Channel {
     required this.subscriberCount,
     required this.videoCount,
     required this.uploadPlaylistId,
-    this.videos = const [], // Initialize an empty list if no videos are provided
+    this.videos = const [],
   });
 
-  // Factory constructor to create Channel from a map
 factory Channel.fromMap(Map<String, dynamic> map) {
   return Channel(
     id: map['id'] ?? '',
     title: map['snippet']?['title'] ?? '',
-    // Add null check for profile picture URL
     profilePictureUrl: map['snippet']?['thumbnail']?['default']?['url'] ?? '',
     subscriberCount: map['statistics']?['subscriberCount'] ?? '0',
     videoCount: map['statistics']?['videoCount'] ?? '0',
@@ -33,14 +30,12 @@ factory Channel.fromMap(Map<String, dynamic> map) {
 
 }
 
-// Assuming you have a Video class, this is an example implementation:
 class Video {
   final String id;
   final String title;
   final String thumbnailUrl;
   final String channelTitle;
 
-  // Constructor with required fields
   Video({
     required this.id,
     required this.title,
@@ -48,7 +43,6 @@ class Video {
     required this.channelTitle,
   });
 
-  // Factory constructor to create Video from map
   factory Video.fromMap(Map<String, dynamic> snippet) {
     return Video(
       id: snippet['resourceId'] != null ? snippet['resourceId']['videoId'] ?? '' : '',

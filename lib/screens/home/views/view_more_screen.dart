@@ -5,14 +5,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 class ViewMoreScreen extends StatelessWidget {
   final CarouselBlogModel blog;
 
-  // Constructor to accept a single blog object
   const ViewMoreScreen({Key? key, required this.blog}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(blog.title), // Use the blog title for the AppBar
+        title: Text(blog.title),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -20,14 +19,12 @@ class ViewMoreScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Blog Title
               Text(
                 blog.title,
                 style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
 
-              // Blog Image
               blog.imagePath.endsWith('.svg')
                   ? SvgPicture.asset(
                       blog.imagePath,
@@ -43,7 +40,6 @@ class ViewMoreScreen extends StatelessWidget {
                     ),
               const SizedBox(height: 20),
 
-              // Detailed Description
               const Text(
                 'Detailed Description:',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

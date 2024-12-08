@@ -18,10 +18,8 @@ class BookAPickupController extends GetxController {
   var pickUpAddress = ''.obs;
   var locationSelectionMode = 3.obs;
 
-  //* Form Keys
   final addressFormKey = GlobalKey<FormState>();
 
-  //* TextEditing Controllers
   final instructionsTextController = TextEditingController();
 
   final addressLine1TextController = TextEditingController();
@@ -32,8 +30,6 @@ class BookAPickupController extends GetxController {
 
   final contactNameTextController = TextEditingController();
   final contactNumberTextController = TextEditingController();
-
-  //* Functions:
 
   void setPickupLocationAutomatically() {
     Get.find<LocationController>().getUserAddress();
@@ -108,7 +104,6 @@ class BookAPickupController extends GetxController {
         );
       }
     } else {
-      //* Details Not Filled:
       Get.snackbar(
         'Error',
         'Please fill all the details',

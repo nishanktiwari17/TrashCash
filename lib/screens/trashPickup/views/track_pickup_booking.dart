@@ -13,37 +13,30 @@ class TrackPickupBookingScreen extends StatelessWidget {
   const TrackPickupBookingScreen({super.key, required this.pickupBooking});
   final ScheduledPickupModel pickupBooking;
 
-  // This method will send the broadcast message and update Firebase
   void sendPickupConfirmationMessage(String userId) async {
-    // Step 1: Get the current user data
     DocumentReference userRef =
         FirebaseFirestore.instance.collection('users').doc(userId);
 
     try {
-      // Fetch the user document
       DocumentSnapshot userSnapshot = await userRef.get();
 
       if (userSnapshot.exists) {
-        // Step 2: Extract current reward points
         Map<String, dynamic> userData =
             userSnapshot.data() as Map<String, dynamic>;
         int rewardPointsTillDate = userData['reward_points_till_date'] ?? 0;
         int rewardPointsClaimed = userData['reward_points_claimed'] ?? 0;
         int rewardPointsAvailable = userData['reward_points_available'] ?? 0;
 
-        // Step 3: Calculate new reward points
         int rewardPointsToAdd = 15;
         int newRewardPointsTillDate = rewardPointsTillDate + rewardPointsToAdd;
         int newRewardPointsAvailable =
             rewardPointsAvailable + rewardPointsToAdd;
 
-        // Step 4: Update the user's reward points in Firestore
         await userRef.update({
           'reward_points_till_date': newRewardPointsTillDate,
           'reward_points_available': newRewardPointsAvailable,
         });
 
-        // Step 5: Show the Snackbar with confirmation message
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Get.snackbar(
             "Congratulations!",
@@ -52,11 +45,10 @@ class TrackPickupBookingScreen extends StatelessWidget {
             backgroundColor: Colors.green,
             colorText: Colors.white,
             duration: Duration(
-                seconds: 3), // Set duration to show the message for 3 seconds
+                seconds: 3), 
           );
         });
       } else {
-        // Handle case where the user data is not found
         Get.snackbar(
           "Error",
           "User not found. Unable to update reward points.",
@@ -66,7 +58,6 @@ class TrackPickupBookingScreen extends StatelessWidget {
         );
       }
     } catch (e) {
-      // Handle errors in fetching or updating data
       Get.snackbar(
         "Error",
         "An error occurred while updating reward points: $e",
@@ -87,7 +78,6 @@ class TrackPickupBookingScreen extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.45,
             child: Stack(
               children: [
-                // Google Map widget stays as it is.
                 GoogleMap(
                   initialCameraPosition: CameraPosition(
                     target: LatLng(
@@ -112,7 +102,6 @@ class TrackPickupBookingScreen extends StatelessWidget {
                   left: 16,
                   child: GestureDetector(
                     onTap: () {
-                      // Use Navigator.pop() to go back
                       Navigator.pop(context);
                     },
                     child: CircleAvatar(
@@ -151,18 +140,16 @@ class TrackPickupBookingScreen extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  //* StepProgressIndicator with proper Obx usage for status updates
                   StreamBuilder<DocumentSnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('pickup_bookings')
                         .doc(pickupBooking.id)
-                        .snapshots(), // Listening to the updates in Firestore
+                        .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return Center(child: CircularProgressIndicator());
                       }
 
-                      // Check if the document exists before accessing its fields
                       if (!snapshot.data!.exists) {
                         return Center(
                             child: Text(
@@ -172,16 +159,13 @@ class TrackPickupBookingScreen extends StatelessWidget {
                       var pickupData =
                           snapshot.data!.data() as Map<String, dynamic>;
 
-                      // Check if 'status' field exists in the document
                       if (!pickupData.containsKey('status')) {
                         return Center(child: Text('Status field not found.'));
                       }
 
-                      // Access the status field after null checks
                       int currentStep =
                           int.parse(pickupData['status'].toString());
 
-                      // If the status has changed to 3, show the message
                       if (currentStep == 3) {
                         sendPickupConfirmationMessage(pickupData["user_id"]);
                       }
@@ -239,7 +223,6 @@ class TrackPickupBookingScreen extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  // Delivery Partner Info
                   Visibility(
                     visible: pickupBooking
                         .pickupPartner.value.partnerName.isNotEmpty,
@@ -262,9 +245,9 @@ class TrackPickupBookingScreen extends StatelessWidget {
                       subtitle: Text(
                         '${pickupBooking.pickupPartner.value.partnerName}',
                         style: TextStyle(
-                          fontSize: 14, // Example font size
-                          fontWeight: FontWeight.w400, // Example weight
-                          color: Colors.black54, // Adjust color as needed
+                          fontSize: 14, 
+                          fontWeight: FontWeight.w400, 
+                          color: Colors.black54, 
                         ),
                       ),
                     ),

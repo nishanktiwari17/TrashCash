@@ -15,62 +15,83 @@ class ScheduledPickupScreen extends StatefulWidget {
   final bool backButtonVisible;
 
   @override
-  _ScheduledPickupScreenState createState() => _ScheduledPickupScreenState();
+  ScheduledPickupScreenState createState() => ScheduledPickupScreenState();
 }
 
-class _ScheduledPickupScreenState extends State<ScheduledPickupScreen> {
-  bool isLoading = true; // This will indicate whether data is being fetched
-  List<ScheduledPickupModel> scheduledPickups =
-      []; // List to store scheduled pickups
+class ScheduledPickupScreenState extends State<ScheduledPickupScreen> {
+  bool isLoading = true;
+  List<ScheduledPickupModel> scheduledPickups = [];
 
   @override
   void initState() {
     super.initState();
-    fetchScheduledPickups(); // Fetch the scheduled pickups when the screen is initialized
+    fetchScheduledPickups();
   }
 
-  // Fetch the scheduled pickups from Firebase
   Future<void> fetchScheduledPickups() async {
     try {
       Future<String> fetchUserName() async {
         final user = FirebaseAuth.instance.currentUser;
 
-        // If user is null, throw an exception or return a default value
         if (user == null) {
           throw Exception('No user is currently signed in');
         }
 
-        // Return the UID as a non-nullable string
         return user.uid;
       }
 
-      String uid = await fetchUserName(); // Get the UID of the current user
+      String uid = await fetchUserName();
       var pickups = await FirebaseFunctions.instance.fetchScheduledPickups(uid);
 
-      // After fetching the data, update the UI
       setState(() {
-        scheduledPickups = pickups;  // Update the list of scheduled pickups
-        isLoading = false;  // Stop showing the loading spinner
+        scheduledPickups = pickups;
+        isLoading = false;
       });
     } catch (e) {
       print('Error fetching scheduled pickups: $e');
       setState(() {
-        isLoading = false;  // Stop loading spinner in case of an error
+        isLoading = false;
       });
     }
   }
 
-  // Function to handle the deletion of a scheduled pickup
   Future<void> deleteScheduledPickup(String pickupId) async {
     try {
-      // Call Firebase function to delete the pickup booking
       await FirebaseFunctions.instance.deletePickupBooking(pickupId);
 
-      // After deletion, refresh the list
       fetchScheduledPickups();
     } catch (e) {
       print('Error deleting pickup booking: $e');
     }
+  }
+
+  Future<void> showConfirmationDialog(String pickupId) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Deletion'),
+          content:
+              Text('Are you sure you want to delete this scheduled pickup?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Yes'),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await deleteScheduledPickup(pickupId);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -125,8 +146,7 @@ class _ScheduledPickupScreenState extends State<ScheduledPickupScreen> {
                               return ScheduledBookingTile(
                                 scheduledPickup: pickup,
                                 onCancel: () async {
-                                  // Call deleteScheduledPickup function to delete the booking
-                                  await deleteScheduledPickup(pickup.id);
+                                  await showConfirmationDialog(pickup.id);
                                 },
                               );
                             },

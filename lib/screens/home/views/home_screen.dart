@@ -9,7 +9,6 @@ import 'package:waste_management_app/constants/fonts.dart';
 import 'package:waste_management_app/screens/home/controllers/location_controller.dart';
 import 'package:waste_management_app/screens/home/data/carousel_blog_list.dart';
 import 'package:waste_management_app/screens/home/views/components/carousel_card.dart';
-import 'package:waste_management_app/screens/home/views/components/top_row.dart';
 import 'package:waste_management_app/screens/home/views/view_more_screen.dart';
 import 'package:waste_management_app/screens/profile/views/profile_screen.dart';
 import 'package:waste_management_app/utils/firebase_functions.dart';
@@ -22,25 +21,21 @@ import 'package:waste_management_app/screens/login/repository/auth_repository.da
 
 class UserController extends GetxController {
   Rx<String> userName = ''.obs;
-  Rx<String> profilePicUrl = ''.obs;  // Add a variable to store profile picture URL
+  Rx<String> profilePicUrl = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
-    fetchUserDetails();  // Fetch both user name and profile picture on initialization
+    fetchUserDetails();
   }
 
-  // Fetch user details (name and profile picture) from Firestore using FirebaseFunctions
   Future<void> fetchUserDetails() async {
     final user = FirebaseAuth.instance.currentUser;
-    String? uid = user?.uid; // Replace with dynamic user UID (e.g., from FirebaseAuth)
-    
+    String? uid = user?.uid; 
     if (uid != null) {
-      // Fetch user name and profile picture URL from Firebase Functions or Firestore
       String? fetchedName = await FirebaseFunctions.instance.getUserName(uid: uid);
       String? fetchedProfilePic = await FirebaseFunctions.instance.fetchProfilePic(uid: uid);
       
-      // Update the controller's state with the fetched details
       userName.value = fetchedName ?? '';
       profilePicUrl.value = fetchedProfilePic ?? '';
     }
@@ -57,14 +52,14 @@ class HomeScreen extends StatelessWidget {
         title: Text('Home Screen'),
       ),
       drawer: Container(
-  width: 250.0, // Adjust the width of the drawer
+  width: 250.0, 
   child: Drawer(
     child: ListView(
       padding: EdgeInsets.zero,
       children: <Widget>[
         Container(
-          height: 110.0, // Adjust the height as needed
-          color: Colors.green, // Keep the green background color
+          height: 110.0, 
+          color: Colors.green, 
           child: DrawerHeader(
             child: Text(
               'Menu',
@@ -82,7 +77,7 @@ class HomeScreen extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => ScheduledPickupScreen(
-                  backButtonVisible: true, // Pass true for back button visibility
+                  backButtonVisible: true,
                 ),
               ),
             );
@@ -115,10 +110,10 @@ class HomeScreen extends StatelessWidget {
             );
           },
         ),
-        Divider(), // Add a divider for separation
+        Divider(),
         ListTile(
           title: Text('Logout'),
-          leading: Icon(Icons.exit_to_app, color: Colors.red), // Optional icon
+          leading: Icon(Icons.exit_to_app, color: Colors.red),
           onTap: () {
             AuthRepository.instance.signOut();
           },
@@ -134,16 +129,15 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Use GetX to fetch and display the user's name and profile picture
                 GetX<UserController>(
                   init: UserController(),
                   builder: (controller) {
                     return HomeScreenTopRow(
                       userName: controller.userName.value.isEmpty
-                          ? 'Loading...'  // Placeholder text while loading
+                          ? 'Loading...'  
                           : controller.userName.value,
                       profilePicUrl: controller.profilePicUrl.value.isEmpty
-                          ? 'default_image_url'  // Placeholder if no profile picture is set
+                          ? 'default_image_url' 
                           : controller.profilePicUrl.value,
                     );
                   },
@@ -172,11 +166,9 @@ class HomeScreen extends StatelessWidget {
                           description: blog.description,
                           imagePath: blog.imagePath,
                           onTap: () {
-                            // Define the action for the entire card (e.g., navigate to a detail screen)
                             print('Card tapped: ${blog.title}');
                           },
                           onViewMorePressed: () {
-                            // Pass the selected blog to ViewMoreScreen
                             Get.to(() => ViewMoreScreen(blog: blog));
                           }
                         );
@@ -262,9 +254,8 @@ class HomeScreenTopRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,  // Align items on opposite sides
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // User name
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -274,16 +265,14 @@ class HomeScreenTopRow extends StatelessWidget {
             ),
           ],
         ),
-        // Profile picture on the right
         GestureDetector(
           onTap: () {
-            // Navigate to the profile page when the profile picture is tapped
-            Get.to(() => ProfileScreen());  // Replace ProfilePage() with your actual profile page widget
+            Get.to(() => ProfileScreen());
           },
           child: CircleAvatar(
             radius: 30,
-            backgroundImage: NetworkImage(profilePicUrl),  // Load profile picture from URL
-            backgroundColor: Colors.grey[200],  // Set a fallback color if the image fails to load
+            backgroundImage: NetworkImage(profilePicUrl),
+            backgroundColor: Colors.grey[200],
           ),
         ),
       ],

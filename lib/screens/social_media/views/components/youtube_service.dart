@@ -12,7 +12,6 @@ class APIService {
   String _nextPageToken = '';
 
   Future<Channel> fetchChannel({required String channelId}) async {
-    // Ensure channelId is not null
     if (channelId.isEmpty) {
       throw ArgumentError('Channel ID cannot be empty');
     }
@@ -31,13 +30,11 @@ class APIService {
       HttpHeaders.contentTypeHeader: 'application/json',
     };
 
-    // Get Channel
     var response = await http.get(uri, headers: headers);
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(response.body)['items'][0];
       Channel channel = Channel.fromMap(data);
 
-      // Fetch first batch of videos from uploads playlist
       if (channel.uploadPlaylistId.isNotEmpty) {
         channel.videos = await fetchVideosFromPlaylist(
           playlistId: channel.uploadPlaylistId,
@@ -50,7 +47,6 @@ class APIService {
   }
 
   Future<List<Video>> fetchVideosFromPlaylist({required String playlistId}) async {
-    // Ensure playlistId is not null or empty
     if (playlistId.isEmpty) {
       throw ArgumentError('Playlist ID cannot be empty');
     }
@@ -71,7 +67,6 @@ class APIService {
       HttpHeaders.contentTypeHeader: 'application/json',
     };
 
-    // Get Playlist Videos
     var response = await http.get(uri, headers: headers);
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
@@ -81,7 +76,6 @@ class APIService {
       _nextPageToken = data['nextPageToken'] ?? '';
       List<dynamic> videosJson = data['items'];
 
-      // Fetch first eight videos from uploads playlist
       List<Video> videos = [];
       videosJson.forEach(
         (json) => videos.add(

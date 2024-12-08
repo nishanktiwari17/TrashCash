@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart'; // Import GetX for reactive variables
+import 'package:get/get.dart'; 
 import 'package:waste_management_app/screens/trashPickup/model/pickup_partner_model.dart';
 import 'package:waste_management_app/utils/helper_model.dart';
 
@@ -13,11 +13,11 @@ class ScheduledPickupModel {
   final Timestamp selectedDate;
   final List<String> selectedWasteTypes;
   final GeoPoint selectedLocation;
-  final RxString status; // RxString for reactive status
+  final RxString status;
   final String id;
   final String contactName;
   final String contactNumber;
-  final Rx<PickupPartnerModel> pickupPartner; // Rx<PickupPartnerModel> for reactive partner
+  final Rx<PickupPartnerModel> pickupPartner;
 
   ScheduledPickupModel({
     required this.instructions,

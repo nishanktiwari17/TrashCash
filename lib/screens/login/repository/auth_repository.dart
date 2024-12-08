@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,7 +8,6 @@ import 'package:waste_management_app/utils/firebase_functions.dart';
 class AuthRepository extends GetxController {
   static AuthRepository get instance => Get.find();
 
-  //* Variables:
   final _auth = FirebaseAuth.instance;
   late final Rx<User?> firebaseUser;
 
@@ -35,8 +33,6 @@ class AuthRepository extends GetxController {
       ));
     }
   }
-
-  //* Functions:
 
   //* ------- WITH EMAIL AND PASSWORD: --------------------
   void signInWithEmailAndPassword(

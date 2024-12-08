@@ -28,20 +28,6 @@ class FirebaseFunctions {
     });
   }
 
-  Future<void> createUserWithPhoneNumber(
-      {required String name,
-      required String phoneNumber,
-      required String uid}) async {
-    await FirebaseFirestore.instance
-        .collection(FirebaseCollections.USERS)
-        .doc(phoneNumber)
-        .set({
-      'name': name,
-      'phoneNumber': phoneNumber,
-      'uid': uid,
-      'email': null
-    });
-  }
 
   Future<bool> checkIfPhoneNumberExists(String phoneNumber) async {
     bool exists = false;
@@ -60,34 +46,28 @@ class FirebaseFunctions {
     return exists;
   }
 
+  Future<String> fetchProfilePic({required String uid}) async {
+    String profilePicUrl = '';
 
-Future<String> fetchProfilePic({required String uid}) async {
-  String profilePicUrl = '';
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection(FirebaseCollections.USERS)
+          .doc(uid)
+          .get();
 
-  try {
-    // Fetch the user document based on UID
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .collection(FirebaseCollections.USERS)
-        .doc(uid)
-        .get();
+      if (userDoc.exists) {
+        Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
 
-    // Check if document exists
-    if (userDoc.exists) {
-      // Safely cast the document data to Map<String, dynamic>
-      Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
-
-      // Retrieve the profile picture URL from the 'profile_picture' field
-      profilePicUrl = userData['profile_picture'] ?? '';
+        profilePicUrl = userData['profile_picture'] ?? '';
+      }
+    } catch (e) {
+      print('Error fetching profile picture: $e');
     }
-  } catch (e) {
-    print('Error fetching profile picture: $e');
+
+    return profilePicUrl;
   }
 
-  return profilePicUrl;
-}
-
-
-    Future<String> getUserName({required String? uid}) async {
+  Future<String> getUserName({required String? uid}) async {
     String name = '';
     await FirebaseFirestore.instance
         .collection(FirebaseCollections.USERS)
@@ -100,6 +80,7 @@ Future<String> fetchProfilePic({required String uid}) async {
     });
     return name;
   }
+
   //* ------------------- TRASH PICKUP FUNCTIONS: ---------------------
   Future<void> createPickupBooking(
       {required DateTime selectedDate,
@@ -139,41 +120,39 @@ Future<String> fetchProfilePic({required String uid}) async {
             });
   }
 
-// Function to delete pickup booking
-Future<void> deletePickupBooking(String pickupId) async {
-  try {
-    await FirebaseFirestore.instance
-        .collection(FirebaseCollections.PICKUP_BOOKINGS)
-        .doc(pickupId)
-        .delete();
-    print('Pickup booking deleted successfully');
-  } catch (e) {
-    print('Error deleting pickup booking: $e');
-  }
-}
-
-
-Future<List<ScheduledPickupModel>> fetchScheduledPickups(String uid) async {
-  List<ScheduledPickupModel> pickups = [];
-
-  try {
-    var snapshot = await FirebaseFirestore.instance
-        .collection(FirebaseCollections.PICKUP_BOOKINGS)
-        .where('user_id', isEqualTo: uid)
-        .get();
-
-    if (snapshot.docs.isNotEmpty) {
-      for (var doc in snapshot.docs) {
-        pickups.add(ScheduledPickupModel.fromMap(doc.data() as Map<String, dynamic>));
-      }
+  Future<void> deletePickupBooking(String pickupId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection(FirebaseCollections.PICKUP_BOOKINGS)
+          .doc(pickupId)
+          .delete();
+      print('Pickup booking deleted successfully');
+    } catch (e) {
+      print('Error deleting pickup booking: $e');
     }
-  } catch (e) {
-    print('Error fetching scheduled pickups: $e');
   }
 
-  return pickups;
-}
+  Future<List<ScheduledPickupModel>> fetchScheduledPickups(String uid) async {
+    List<ScheduledPickupModel> pickups = [];
 
+    try {
+      var snapshot = await FirebaseFirestore.instance
+          .collection(FirebaseCollections.PICKUP_BOOKINGS)
+          .where('user_id', isEqualTo: uid)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        for (var doc in snapshot.docs) {
+          pickups.add(
+              ScheduledPickupModel.fromMap(doc.data() as Map<String, dynamic>));
+        }
+      }
+    } catch (e) {
+      print('Error fetching scheduled pickups: $e');
+    }
+
+    return pickups;
+  }
 
   //* ------------------- SUBMIT FEEDBACK FUNCTIONS: ---------------------
 
@@ -189,27 +168,4 @@ Future<List<ScheduledPickupModel>> fetchScheduledPickups(String uid) async {
       'user_id': uid,
     });
   }
-
-  // //* ----------------------- SHOP RELATED FUNCTIONS: -----------------------
-  // Future<void> setupInitialStore({required List<ShopItemModel> shopItems}) async{
-  //   await FirebaseFirestore.instance
-  //       .collection(FirebaseCollections.SHOP_ITEMS)
-  //       .get()
-  //       .then((value) {
-  //     if (value.docs.isEmpty) {
-  //       shopItems.forEach((element) async {
-  //         await FirebaseFirestore.instance
-  //             .collection(FirebaseCollections.SHOP_ITEMS)
-  //             .add({
-  //           'name': element.name,
-  //           'description': element.description,
-  //           'imageUrl': element.imageUrl,
-  //           'price': element.price,
-  //           'category': element.category,
-  //           'id': element.id,
-  //         });
-  //       });
-  //     }
-  //   });
-  // }
 }

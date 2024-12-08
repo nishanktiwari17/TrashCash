@@ -4,13 +4,13 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class VideoScreen extends StatefulWidget {
   final String id;
 
-  VideoScreen({required this.id});  // Make `id` required
+  VideoScreen({required this.id});
 
   @override
-  _VideoScreenState createState() => _VideoScreenState();
+  VideoScreenState createState() => VideoScreenState();
 }
 
-class _VideoScreenState extends State<VideoScreen> {
+class VideoScreenState extends State<VideoScreen> {
   late YoutubePlayerController _controller;
 
   @override

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:waste_management_app/screens/login/views/login_with_email.dart';
-
 import 'package:waste_management_app/screens/signup/views/signup_screen.dart';
 import 'package:waste_management_app/sharedWidgets/custom_bordered_button.dart';
-
-import '../controller/login_controller.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -18,7 +15,6 @@ class LoginScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // Navigate back to the previous screen
             Get.back();
           },
         ),
@@ -46,7 +42,6 @@ class LoginScreen extends StatelessWidget {
                   width: 300,
                 ),
                 const SizedBox(height: 20),
-                // Login with Email button
                 CustomBorderedButton(
                   title: 'Login With Email',
                   onPressed: () {
@@ -55,7 +50,6 @@ class LoginScreen extends StatelessWidget {
                   icon: Icons.email_outlined,
                 ),
                 const SizedBox(height: 20),
-                // Sign Up Option
                 GestureDetector(
                   onTap: () {
                     Get.to(() => SignUpScreen());

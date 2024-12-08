@@ -1,4 +1,3 @@
-//* MODEL CLASS FOR DISPLAYING THE BLOGS IN THE CAROUSEL ON THE HOME SCREEN
 
 class CarouselBlogModel {
   final String title;

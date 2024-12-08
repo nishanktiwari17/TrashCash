@@ -3,16 +3,11 @@ import 'package:get/get.dart';
 import 'package:waste_management_app/utils/firebase_functions.dart';
 
 class ProfileController extends GetxController {
-  //* Variables:
 
-  //* Text Editing Controllers: (For Feedback Form)
   final subjectTextController = TextEditingController();
   final feedbackTextController = TextEditingController();
 
-  //* Form Keys:
   final feedbackFormKey = GlobalKey<FormState>();
-
-  //* ------------------- FUNCTIONS: ---------------------
 
   void submitFeedback(
       {required String uid,

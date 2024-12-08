@@ -8,7 +8,6 @@ class TrashPickupRepository {
   static final instance = TrashPickupRepository._();
   TrashPickupRepository._();
 
-  //* Functions:
   Future<ApiResponse> getScheduledPickups(String uid) async {
     try {
       log(uid);
