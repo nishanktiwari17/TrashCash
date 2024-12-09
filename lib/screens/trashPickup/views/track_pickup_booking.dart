@@ -35,6 +35,7 @@ class TrackPickupBookingScreen extends StatelessWidget {
         await userRef.update({
           'reward_points_till_date': newRewardPointsTillDate,
           'reward_points_available': newRewardPointsAvailable,
+          'reward_points_claimed': rewardPointsClaimed
         });
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -44,8 +45,7 @@ class TrackPickupBookingScreen extends StatelessWidget {
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.green,
             colorText: Colors.white,
-            duration: Duration(
-                seconds: 3), 
+            duration: Duration(seconds: 3),
           );
         });
       } else {
@@ -166,7 +166,7 @@ class TrackPickupBookingScreen extends StatelessWidget {
                       int currentStep =
                           int.parse(pickupData['status'].toString());
 
-                      if (currentStep == 3) {
+                      if (currentStep == 3 ) {
                         sendPickupConfirmationMessage(pickupData["user_id"]);
                       }
 
@@ -218,41 +218,40 @@ class TrackPickupBookingScreen extends StatelessWidget {
                       );
                     },
                   ),
-                  
-                  
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Visibility(
-                    visible: pickupBooking
-                        .pickupPartner.value.partnerName.isNotEmpty,
-                    child: ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      isThreeLine: true,
-                      leading: CircleAvatar(
-                        radius: 25,
-                        backgroundColor: kPrimaryColor,
-                        child: Icon(
-                          UIcons.boldRounded.user,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                      title: Text(
-                        'Delivery Partner',
-                        style: kTitle3Style,
-                      ),
-                      subtitle: Text(
-                        '${pickupBooking.pickupPartner.value.partnerName}',
-                        style: TextStyle(
-                          fontSize: 14, 
-                          fontWeight: FontWeight.w400, 
-                          color: Colors.black54, 
-                        ),
-                      ),
-                    ),
-                  )
                 ],
+              ),
+            ),
+          ),
+          Visibility(
+            visible: pickupBooking
+                .pickupPartner.value.partnerName.isNotEmpty,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                isThreeLine: true,
+                leading: CircleAvatar(
+                  radius: 25,
+                  backgroundColor: kPrimaryColor,
+                  child: Icon(
+                    UIcons.boldRounded.user,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+                title: Text(
+                  'Delivery Partner',
+                  style: kTitle3Style,
+                ),
+                subtitle: Text(
+                  '${pickupBooking.pickupPartner.value.partnerName} will be picking up your order.\n'
+                  '${pickupBooking.pickupPartner.value.partnerName} Number: ${pickupBooking.pickupPartner.value.partnerContact}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black54,
+                  ),
+                ),
               ),
             ),
           ),

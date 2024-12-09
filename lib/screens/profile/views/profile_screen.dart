@@ -30,12 +30,16 @@ class ProfileScreenState extends State<ProfileScreen> {
   String? originalGender;
   String? originalNickname;
 
+  int? availableRewardPoints;
+  int? redeemedRewardPoints;
+  int? totalRewardPoints;
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final TextEditingController nicknameController = TextEditingController();
 
-  String selectedGender = "Men"; 
+  String selectedGender = "Men";
 
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -48,15 +52,15 @@ class ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         _image = File(image.path);
       });
-      _uploadImage(); 
+      uploadImage();
     }
   }
 
-  Future<void> _uploadImage() async {
+  Future<void> uploadImage() async {
     if (_image == null) return;
 
     try {
-      User? user = FirebaseAuth.instance.currentUser;
+      final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         throw Exception('No user is signed in');
       }
@@ -80,13 +84,20 @@ class ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future<void> _fetchUserDetails() async {
+  Future<void> fetchUserDetails() async {
     try {
-      User? user = FirebaseAuth.instance.currentUser;
+      final user = FirebaseAuth.instance.currentUser;
+      print("indide");
+      print(user);
       if (user != null) {
         DocumentSnapshot docSnapshot =
             await _firestore.collection('users').doc(user.uid).get();
         if (docSnapshot.exists) {
+
+            redeemedRewardPoints = docSnapshot['reward_points_claimed'] ?? 0;
+            availableRewardPoints = docSnapshot['reward_points_available']?? 0;
+            totalRewardPoints = docSnapshot['reward_points_till_date'] ?? 0;
+
           setState(() {
             profileImageUrl = docSnapshot['profile_picture'];
             userName = docSnapshot['name'] ?? '';
@@ -100,14 +111,18 @@ class ProfileScreenState extends State<ProfileScreen> {
             nicknameController.text = docSnapshot['nickname'] ?? '';
             selectedGender = docSnapshot['gender'] ?? 'Men';
           });
+        } else {
+          print("Snapshot doesn't exist");
         }
+      } else {
+        print("User data failed");
       }
     } catch (e) {
       print("Error fetching user details: $e");
     }
   }
 
-  Future<void> _updateUserDetails() async {
+  Future<void> updateUserDetails() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -120,17 +135,15 @@ class ProfileScreenState extends State<ProfileScreen> {
         });
 
         Get.snackbar(
-          "Hooray! ", 
-          "Details have been saved.", 
-          snackPosition: SnackPosition.TOP, 
-          backgroundColor: Colors.green, 
-          colorText: Colors.white, 
-          duration: Duration(seconds: 2), 
-          borderRadius: 8.0, 
-          margin: EdgeInsets.symmetric(
-              horizontal: 20, vertical: 10),
-          padding: EdgeInsets.symmetric(
-              vertical: 10, horizontal: 20),
+          "Hooray! ",
+          "Details have been saved.",
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          duration: Duration(seconds: 2),
+          borderRadius: 8.0,
+          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         );
       }
     } catch (e) {
@@ -138,7 +151,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Widget _buildGenderField() {
+  Widget buildGenderField() {
     return DropdownButtonFormField<String>(
       value: selectedGender,
       onChanged: (String? newValue) {
@@ -153,7 +166,9 @@ class ProfileScreenState extends State<ProfileScreen> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
+        contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
       ),
+      isDense: true,
       items: ['Men', 'Women', 'Other']
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
@@ -175,7 +190,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchUserDetails();
+    fetchUserDetails();
 
     nameController.addListener(_checkForChanges);
     phoneController.addListener(_checkForChanges);
@@ -203,6 +218,34 @@ class ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
+Widget _buildNonEditableField(String label, int? value) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.white,
+        ),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            '$label:',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            value?.toString() ?? 'N/A',
+            style: TextStyle(fontSize: 14),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -288,7 +331,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
+                        padding: const EdgeInsets.only(right: 9.0),
                         child: InputDecorator(
                           decoration: InputDecoration(
                             labelText: 'Gender',
@@ -297,34 +340,29 @@ class ProfileScreenState extends State<ProfileScreen> {
                             ),
                             contentPadding: EdgeInsets.symmetric(
                                 vertical:
-                                    16.0),
+                                    9.0),
                           ),
                           child: DropdownButtonHideUnderline(
-                            child: Container(
-                              width: double
-                                  .infinity, 
-                              child: DropdownButton<String>(
-                                value: selectedGender,
-                                isExpanded:
-                                    true, 
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    if (newValue != null) {
-                                      selectedGender = newValue;
-                                    }
-                                  });
-                                },
-                                items: [
-                                  'Men',
-                                  'Women',
-                                  'Other'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                              ),
+                            child: DropdownButton<String>(
+                              value: selectedGender,
+                              isExpanded: true,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  if (newValue != null) {
+                                    selectedGender = newValue;
+                                  }
+                                });
+                              },
+                              items: [
+                                'Men',
+                                'Women',
+                                'Other'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
                             ),
                           ),
                         ),
@@ -337,7 +375,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                   child: ElevatedButton(
                     onPressed: _hasChanges()
                         ? () {
-                            _updateUserDetails();
+                            updateUserDetails();
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
@@ -352,9 +390,13 @@ class ProfileScreenState extends State<ProfileScreen> {
                       'Save Changes',
                       style: TextStyle(fontSize: 16),
                     ),
+
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
+                _buildNonEditableField('Available Reward Points', availableRewardPoints),
+                _buildNonEditableField('Redeemed Reward Points', redeemedRewardPoints),
+                _buildNonEditableField('Total Reward Points Collected', totalRewardPoints),
               ],
             ),
           ),
@@ -362,4 +404,5 @@ class ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
 }

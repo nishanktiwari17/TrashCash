@@ -10,7 +10,6 @@ import 'package:waste_management_app/screens/home/controllers/location_controlle
 import 'package:waste_management_app/screens/home/data/carousel_blog_list.dart';
 import 'package:waste_management_app/screens/home/views/components/carousel_card.dart';
 import 'package:waste_management_app/screens/home/views/view_more_screen.dart';
-import 'package:waste_management_app/screens/profile/views/profile_screen.dart';
 import 'package:waste_management_app/utils/firebase_functions.dart';
 import 'contact_support_screen.dart';
 import 'faq_screen.dart';
@@ -265,15 +264,10 @@ class HomeScreenTopRow extends StatelessWidget {
             ),
           ],
         ),
-        GestureDetector(
-          onTap: () {
-            Get.to(() => ProfileScreen());
-          },
-          child: CircleAvatar(
-            radius: 30,
-            backgroundImage: NetworkImage(profilePicUrl),
-            backgroundColor: Colors.grey[200],
-          ),
+        CircleAvatar(
+          radius: 30,
+          backgroundImage: NetworkImage(profilePicUrl),
+          backgroundColor: Colors.grey[200],
         ),
       ],
     );

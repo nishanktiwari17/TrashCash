@@ -91,6 +91,7 @@ class FirebaseFunctions {
       required String contactName,
       required String contactNumber,
       required String instructions,
+      required Object pickupPartner,
       required String uid}) async {
     await FirebaseFirestore.instance
         .collection(FirebaseCollections.PICKUP_BOOKINGS)
@@ -107,10 +108,7 @@ class FirebaseFunctions {
       'contactNumber': contactNumber,
       'status': '0',
       'user_id': uid,
-      'pickupPartner': {
-        'partner_name': '',
-        'partner_contact': '',
-      }
+      'pickupPartner': pickupPartner
     }).then((value) => {
               log('Pickup Booking Created'),
               FirebaseFirestore.instance
