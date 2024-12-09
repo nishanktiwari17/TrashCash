@@ -91,8 +91,6 @@ void createAPickupBooking() async {
 
         var randomPartner = pickupPartners[Random().nextInt(pickupPartners.length)];
 
-        PickupPartnerModel selectedPickupPartner = randomPartner;
-
         await FirebaseFunctions.instance.createPickupBooking(
           uid: AuthRepository.instance.firebaseUser.value!.uid,
           contactName: contactNameTextController.text,
